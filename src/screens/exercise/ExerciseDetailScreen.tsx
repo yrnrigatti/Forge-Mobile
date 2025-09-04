@@ -67,10 +67,7 @@ export default function ExerciseDetailScreen() {
         <Text style={{ color: ForgeColors.light, marginBottom: 20 }}>{exercise.description || 'N/A'}</Text>
 
         <Text style={ForgeComponents.label}>Grupo Muscular</Text>
-        <Text style={{ color: ForgeColors.light, marginBottom: 20 }}>{exercise.muscleGroup}</Text>
-
-        <Text style={ForgeComponents.label}>Equipamento</Text>
-        <Text style={{ color: ForgeColors.light }}>{exercise.equipment}</Text>
+        <Text style={{ color: ForgeColors.light }}>{exercise.muscleGroup}</Text>
       </View>
 
       <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: 'space-around' }}>

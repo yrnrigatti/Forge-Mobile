@@ -10,27 +10,23 @@ interface ExerciseContextType {
   loading: boolean;
   searchQuery: string;
   selectedMuscleGroup: string | null;
-  selectedEquipment: string | null;
   
   // Ações
   createExercise: (data: {
     name: string;
     description?: string;
     muscleGroup: string;
-    equipment?: string;
   }) => Promise<Exercise | null>;
   updateExercise: (exerciseId: string, updates: Partial<{
     name: string;
     description: string;
     muscleGroup: string;
-    equipment: string;
   }>) => Promise<void>;
   deleteExercise: (exerciseId: string) => Promise<void>;
   
   // Filtros e busca
   setSearchQuery: (query: string) => void;
   setMuscleGroupFilter: (muscleGroup: string | null) => void;
-  setEquipmentFilter: (equipment: string | null) => void;
   clearFilters: () => void;
   
   // Carregamento
@@ -39,7 +35,6 @@ interface ExerciseContextType {
   
   // Utilitários
   getMuscleGroups: () => string[];
-  getEquipmentTypes: () => string[];
 }
 
 export const ExerciseContext = createContext<ExerciseContextType | undefined>(undefined);
@@ -54,7 +49,6 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<string | null>(null);
-  const [selectedEquipment, setSelectedEquipment] = useState<string | null>(null);
 
   // Aplicar filtros
   const applyFilters = (exerciseList: Exercise[]) => {
@@ -77,27 +71,19 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
       );
     }
     
-    // Filtro por equipamento
-    if (selectedEquipment) {
-      filtered = filtered.filter(exercise => 
-        exercise.equipment.toLowerCase() === selectedEquipment.toLowerCase()
-      );
-    }
-    
     setFilteredExercises(filtered);
   };
 
   // Atualizar filtros quando dados ou filtros mudarem
   React.useEffect(() => {
     applyFilters(exercises);
-  }, [exercises, searchQuery, selectedMuscleGroup, selectedEquipment]);
+  }, [exercises, searchQuery, selectedMuscleGroup]);
 
   // Criar novo exercício
   const createExercise = async (data: {
     name: string;
     description?: string;
     muscleGroup: string;
-    equipment?: string;
   }): Promise<Exercise | null> => {
     setLoading(true);
     try {
@@ -108,7 +94,6 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
           (record as any).name = data.name;
           (record as any).description = data.description || '';
           (record as any).muscleGroup = data.muscleGroup;
-          (record as any).equipment = data.equipment || 'Peso corporal';
         });
       });
       
@@ -118,7 +103,6 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
           name: data.name,
           description: data.description || '',
           muscle_group: data.muscleGroup,
-          equipment: data.equipment || 'Peso corporal',
         });
         
         // Atualizar lista local
@@ -141,7 +125,6 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
     name: string;
     description: string;
     muscleGroup: string;
-    equipment: string;
   }>) => {
     setLoading(true);
     try {
@@ -152,7 +135,6 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
           if (updates.name !== undefined) (record as any).name = updates.name;
           if (updates.description !== undefined) (record as any).description = updates.description;
           if (updates.muscleGroup !== undefined) (record as any).muscleGroup = updates.muscleGroup;
-          if (updates.equipment !== undefined) (record as any).equipment = updates.equipment;
         });
       });
       
@@ -164,7 +146,6 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
       if (updates.name !== undefined) syncData.name = updates.name;
       if (updates.description !== undefined) syncData.description = updates.description;
       if (updates.muscleGroup !== undefined) syncData.muscle_group = updates.muscleGroup;
-      if (updates.equipment !== undefined) syncData.equipment = updates.equipment;
       
       await syncService.addToSyncQueue('exercises', exerciseId, 'update', syncData);
       
@@ -213,16 +194,10 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
     setSelectedMuscleGroup(muscleGroup);
   };
 
-  // Definir filtro de equipamento
-  const setEquipmentFilter = (equipment: string | null) => {
-    setSelectedEquipment(equipment);
-  };
-
   // Limpar todos os filtros
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedMuscleGroup(null);
-    setSelectedEquipment(null);
   };
 
   // Carregar exercícios
@@ -259,30 +234,21 @@ export function ExerciseProvider({ children }: ExerciseProviderProps) {
     return [...new Set(muscleGroups)].sort();
   };
 
-  // Obter tipos de equipamento únicos
-  const getEquipmentTypes = (): string[] => {
-    const equipmentTypes = exercises.map(exercise => (exercise as any).equipment);
-    return [...new Set(equipmentTypes)].sort();
-  };
-
   const value: ExerciseContextType = {
     exercises,
     filteredExercises,
     loading,
     searchQuery,
     selectedMuscleGroup,
-    selectedEquipment,
     createExercise,
     updateExercise,
     deleteExercise,
     setSearchQuery: handleSetSearchQuery,
     setMuscleGroupFilter,
-    setEquipmentFilter,
     clearFilters,
     loadExercises,
     loadExerciseById,
     getMuscleGroups,
-    getEquipmentTypes,
   };
 
   return (

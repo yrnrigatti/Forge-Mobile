@@ -8,7 +8,6 @@ interface ExerciseFormData {
   name: string;
   description: string;
   muscleGroup: string;
-  equipment: string;
 }
 
 interface FormErrors {
@@ -23,7 +22,6 @@ export default function ExerciseCreateScreen() {
     name: '',
     description: '',
     muscleGroup: '',
-    equipment: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -40,22 +38,35 @@ export default function ExerciseCreateScreen() {
   };
 
   const handleSave = async () => {
-    if (!validateForm()) {
+    console.log('[handleSave] Botão de salvar pressionado.');
+
+    const isFormValid = validateForm();
+    console.log(`[handleSave] Formulário é válido? ${isFormValid}`);
+
+    if (!isFormValid) {
+      console.log('[handleSave] Validação falhou. Abortando.');
       return;
     }
 
-    const newExercise = await createExercise({
-      name: formData.name,
-      description: formData.description,
-      muscleGroup: formData.muscleGroup,
-      equipment: formData.equipment || 'Peso corporal',
-    });
+    try {
+      console.log('[handleSave] Chamando createExercise com os dados:', formData);
+      const newExercise = await createExercise({
+        name: formData.name,
+        description: formData.description,
+        muscleGroup: formData.muscleGroup,
+      });
 
-    if (newExercise) {
-      Alert.alert('Sucesso', 'Exercício criado com sucesso!');
-      navigation.goBack();
-    } else {
-      Alert.alert('Erro', 'Não foi possível criar o exercício. Tente novamente.');
+      console.log('[handleSave] Resultado de createExercise:', newExercise);
+
+      if (newExercise) {
+        Alert.alert('Sucesso', 'Exercício criado com sucesso!');
+        navigation.goBack();
+      } else {
+        Alert.alert('Erro', 'Não foi possível criar o exercício. Verifique os logs para mais detalhes.');
+      }
+    } catch (error) {
+      console.error('[handleSave] Erro ao criar exercício:', error);
+      Alert.alert('Erro Crítico', 'Ocorreu um erro inesperado. Verifique os logs.');
     }
   };
 
@@ -96,18 +107,8 @@ export default function ExerciseCreateScreen() {
         {errors.muscleGroup && <Text style={ForgeComponents.errorText}>{errors.muscleGroup}</Text>}
       </View>
 
-      <View style={{ marginBottom: 30 }}>
-        <Text style={ForgeComponents.label}>Equipamento (Opcional)</Text>
-        <TextInput
-          value={formData.equipment}
-          onChangeText={(text) => setFormData(prev => ({ ...prev, equipment: text }))}
-          placeholder="Ex: Barra e anilhas"
-          style={createInputStyle(false)}
-        />
-      </View>
-
       <TouchableOpacity
-        style={createButtonStyle(loading)}
+        style={[createButtonStyle(loading), { marginTop: 30 }]}
         onPress={handleSave}
         disabled={loading}
       >
