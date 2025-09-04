@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 // Importar telas de autenticação
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+import { ExerciseNavigator } from './ExerciseNavigator';
 
 // Tipos de navegação
 export type RootStackParamList = {
@@ -23,6 +24,7 @@ export type AuthStackParamList = {
 export type MainTabParamList = {
   Dashboard: undefined;
   Workout: undefined;
+  Exercises: undefined;
   Profile: undefined;
 };
 
@@ -100,6 +102,7 @@ function MainTabNavigator() {
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Workout" component={WorkoutScreen} />
+      <Tab.Screen name="Exercises" component={ExerciseNavigator} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

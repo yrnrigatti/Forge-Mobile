@@ -112,6 +112,27 @@ export const ForgeComponents = {
     padding: ForgeSpacing.xl,
     ...ForgeShadows.md,
   },
+
+  // Estilos de Item de Lista
+  listItem: {
+    backgroundColor: ForgeColors.steelLight,
+    borderRadius: ForgeBorderRadius.md,
+    padding: ForgeSpacing.lg,
+    marginBottom: ForgeSpacing.md,
+    ...ForgeShadows.sm,
+  },
+
+  listItemTitle: {
+    fontSize: ForgeFontSizes.lg,
+    fontWeight: ForgeFontWeights.semibold,
+    color: ForgeColors.light,
+  },
+
+  listItemSubtitle: {
+    fontSize: ForgeFontSizes.sm,
+    color: ForgeColors.metallic,
+    marginTop: ForgeSpacing.xs,
+  },
   
   // Títulos
   title: {
