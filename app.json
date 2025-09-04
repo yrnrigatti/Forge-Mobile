@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "forge-v2",
+    "name": "Forge - Login e Acesso",
     "slug": "forge-v2",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.forgev2"
     },
     "web": {
       "favicon": "./assets/favicon.png"

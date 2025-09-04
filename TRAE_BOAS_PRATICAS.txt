@@ -1,0 +1,160 @@
+GUIA DE BOAS PRÁTICAS - TRAE AI
+===============================
+
+VISÃO GERAL
+-----------
+Este documento contém as melhores práticas para uso do Trae AI em nossa equipe, visando maximizar a produtividade e manter a qualidade do código.
+
+CONFIGURAÇÃO INICIAL
+-------------------
+
+1. Configuração do Workspace
+   - Sempre abra o projeto na pasta raiz
+   - Mantenha a estrutura de pastas organizada
+   - Use nomes descritivos para arquivos e pastas
+
+2. Configuração de Ferramentas
+   - Supabase Architect: Agente especializado com MCP do Supabase configurado para operações de banco de dados
+   - Web Testing Helper: Agente especializado com MCP do Playwright configurado para testes automatizados
+
+PRÁTICAS DE DESENVOLVIMENTO
+--------------------------
+
+1. Comunicação com o Trae
+
+   FAÇA:
+   - Seja específico nas suas solicitações
+   - Forneça contexto completo
+   - Uma tarefa por mensagem
+   - Inclua detalhes relevantes: arquivos afetados, linha do erro, comportamento esperado vs atual
+   - Use exemplos quando necessário
+   - Mencione arquivos específicos quando relevante
+
+   EVITE:
+   - Solicitações muito vagas
+   - Múltiplas tarefas não relacionadas em uma única mensagem
+   - Assumir que o Trae conhece mudanças não documentadas
+   - Pedir para "corrigir todos os erros" sem especificar qual priorizar
+
+2. Uso Consciente de Agentes MCP
+
+   QUANDO USAR AGENTES ESPECIALIZADOS:
+   - Supabase Architect: Apenas para operações específicas de banco de dados (migrations, schemas, queries complexas)
+   - Web Testing Helper: Somente para criação e execução de testes automatizados
+   - Outros MCPs: Apenas quando a funcionalidade específica é realmente necessária
+
+   PROBLEMA DO "MARTELO E PREGO":
+   Quando o Trae tem muitas ferramentas disponíveis, ele pode tentar usá-las desnecessariamente, causando:
+   - Diminuição da qualidade das respostas
+   - Aumento do tempo de processamento
+   - Complicação de soluções simples
+   - Overhead desnecessário
+
+   DIRETRIZES:
+   - Use MCPs para tarefas específicas que realmente precisam deles
+   - NÃO use MCPs para explicações conceituais ou tarefas simples
+   - Seja explícito sobre quando quer ou não usar ferramentas específicas
+
+TESTES
+------
+
+3. Estratégia de Testes
+   - Unitários: Para funções e hooks
+   - Integração: Para fluxos completos
+   - E2E: Para cenários críticos do usuário
+
+4. Playwright (Web Testing Helper - Agente MCP)
+   - Use data-testid para seletores estáveis
+   - Teste comportamentos, não implementação
+   - Mantenha testes independentes
+   - Use Page Object Model para testes complexos
+
+BANCO DE DADOS
+--------------
+
+5. Supabase (Supabase Architect - Agente MCP)
+   - Use migrations para mudanças no schema
+   - Implemente RLS (Row Level Security)
+   - Mantenha backups regulares
+   - Use índices apropriados
+
+FERRAMENTAS E COMANDOS ÚTEIS
+---------------------------
+
+9. Verificação Contínua de Tipos TypeScript
+
+   OBJETIVO:
+   Executar "npx tsc --noEmit" constantemente para detectar erros de tipos antes que se tornem problemas de build.
+
+   DICAS PARA O TRAE:
+   - Solicite verificação após mudanças grandes
+   - Inclua na rotina de desenvolvimento
+
+   PROBLEMAS COMUNS:
+   - Imports incorretos
+   - Tipos ausentes
+   - Configuração tsconfig.json
+   - Dependências desatualizadas
+
+10. Estratégia de Criação de Testes Automatizados
+
+    REGRA FUNDAMENTAL:
+    NUNCA criar testes antes da tela estar 100% finalizada
+
+    PROCESSO RECOMENDADO:
+    1. Desenvolvimento Completo da Tela
+    2. Criação de Testes (Uma Tela por Vez)
+    3. Validação individual de cada teste
+
+    BOAS PRÁTICAS:
+    - Confirme que a tela está 100% finalizada antes de criar testes
+    - Foque em apenas uma tela por sessão
+    - Documente todos os cenários de teste
+    - Implemente testes de forma sequencial
+
+    EVITE:
+    - Testes prematuros
+    - Múltiplas telas simultaneamente
+    - Testes genéricos
+
+    FLUXO DE TRABALHO:
+    Finalizar Tela → Validar Manualmente → Documentar Cenários → Criar Testes → Executar e Validar → Próxima Tela
+
+11. Configuração de Pre-commit Hooks (Husky + ESLint)
+
+    OBJETIVO:
+    Garantir qualidade do código antes de cada commit
+
+    VERIFICAÇÕES AUTOMÁTICAS:
+    - Variáveis não usadas: Bloqueia commit
+    - Importações não usadas: Bloqueia commit
+    - Erros de tipagem TypeScript: Bloqueia commit
+    - Problemas de formatação: Bloqueia commit
+    - Violações de regras ESLint: Bloqueia commit
+
+    FLUXO DE TRABALHO:
+    Desenvolvedor faz commit → Husky intercepta → lint-staged executa verificações → Se houver erros: Commit bloqueado → Se tudo ok: Commit permitido
+
+    PROBLEMAS COMUNS:
+    - Husky não funciona: Reinstalar hooks
+    - ESLint não encontra arquivos: Verificar .eslintignore
+    - Commit bloqueado incorretamente: Usar --no-verify com cuidado
+
+
+TROUBLESHOOTING COMUM
+--------------------
+
+13. Problemas de Build
+    - Limpar cache
+    - Remover node_modules e reinstalar
+    - Verificar dependências
+
+14. Problemas de Banco
+    - Verificar conexão com Supabase
+    - Validar migrations
+    - Checar permissões RLS
+
+15. Problemas de Testes
+    - Verificar seletores atualizados
+    - Confirmar dados de teste
+    - Validar timeouts
