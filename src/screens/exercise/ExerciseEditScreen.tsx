@@ -10,7 +10,6 @@ interface ExerciseFormData {
   name: string;
   description: string;
   muscleGroup: string;
-  equipment: string;
 }
 
 interface FormErrors {
@@ -35,7 +34,6 @@ export default function ExerciseEditScreen() {
           name: exercise.name || '',
           description: exercise.description || '',
           muscleGroup: exercise.muscleGroup || '',
-          equipment: exercise.equipment || '',
         });
       }
     };
@@ -64,7 +62,6 @@ export default function ExerciseEditScreen() {
       name: formData.name,
       description: formData.description,
       muscleGroup: formData.muscleGroup,
-      equipment: formData.equipment,
     });
 
     Alert.alert('Sucesso', 'Exercício atualizado com sucesso!');
@@ -116,18 +113,8 @@ export default function ExerciseEditScreen() {
         {errors.muscleGroup && <Text style={ForgeComponents.errorText}>{errors.muscleGroup}</Text>}
       </View>
 
-      <View style={{ marginBottom: 30 }}>
-        <Text style={ForgeComponents.label}>Equipamento (Opcional)</Text>
-        <TextInput
-          value={formData.equipment}
-          onChangeText={(text) => setFormData(prev => prev ? { ...prev, equipment: text } : null)}
-          placeholder="Ex: Barra e anilhas"
-          style={createInputStyle(false)}
-        />
-      </View>
-
       <TouchableOpacity
-        style={createButtonStyle(loading)}
+        style={[createButtonStyle(loading), { marginTop: 30 }]}
         onPress={handleSave}
         disabled={loading}
       >
